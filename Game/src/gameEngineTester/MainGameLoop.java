@@ -36,6 +36,7 @@ public class MainGameLoop {
         ModelData treeData = OBJFileLoader.loadOBJ("tree");
         ModelData grassData = OBJFileLoader.loadOBJ("grassModel");
         ModelData fernData = OBJFileLoader.loadOBJ("fern");
+        ModelData lowTreeData = OBJFileLoader.loadOBJ("lowPolyTree");;
         
         RawModel tree = loader.loadToVAO(treeData.getVertices(), treeData.getTextureCoords(),
         		treeData.getNormals(), treeData.getIndices());
@@ -43,10 +44,13 @@ public class MainGameLoop {
         		grassData.getNormals(), grassData.getIndices());
         RawModel fern = loader.loadToVAO(fernData.getVertices(), fernData.getTextureCoords(),
         		fernData.getNormals(), fernData.getIndices());
+        RawModel lowPolyTree = loader.loadToVAO(lowTreeData.getVertices(), lowTreeData.getTextureCoords(),
+        		lowTreeData.getNormals(), lowTreeData.getIndices());
         
         TexturedModel treeModel = new TexturedModel(tree, new ModelTexture(loader.loadTexture("tree")));
         TexturedModel grassModel = new TexturedModel(grass, new ModelTexture(loader.loadTexture("grassTexture")));
         TexturedModel fernModel = new TexturedModel(fern, new ModelTexture(loader.loadTexture("fern")));
+        TexturedModel lowTreeModel = new TexturedModel(lowPolyTree, new ModelTexture(loader.loadTexture("lowPolyTree")));
         
         grassModel.getTexture().setHasTransparency(true);
         grassModel.getTexture().setUseFakeLighting(true);
@@ -58,6 +62,9 @@ public class MainGameLoop {
         	entities.add(new Entity(treeModel, new Vector3f(random.nextFloat()*800 - 400,0,random.nextFloat() * 600),0,0,0,3));
         	entities.add(new Entity(grassModel, new Vector3f(random.nextFloat()*800 - 400,0,random.nextFloat() * 600),0,0,0,1));
         	entities.add(new Entity(fernModel, new Vector3f(random.nextFloat()*800 - 400,0,random.nextFloat() * 600),0,0,0,0.6f));
+        	if (i % 2 == 0 | i % 3 == 0) {
+        		entities.add(new Entity(lowTreeModel, new Vector3f(random.nextFloat()*800 - 400, 0, random.nextFloat() * 600),0,0,0,0.35f));
+        	}
         }
         
        Light light = new Light(new Vector3f(20000,20000,2000), new Vector3f(1,1,1));
