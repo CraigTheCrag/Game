@@ -98,7 +98,7 @@ public class MainGameLoop {
          
         
         
-        Camera camera = new Camera();
+        Camera camera = new Camera(player);
         
         
         MasterRenderer renderer = new MasterRenderer();
