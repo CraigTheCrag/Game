@@ -93,10 +93,10 @@ public class MainGameLoop {
         
        Light light = new Light(new Vector3f(20000,20000,2000), new Vector3f(1,1,1));
         
-       terrains.add(new Terrain(0, -1, loader, texturePack, blendMap));
-       terrains.add(new Terrain(-1, -1, loader, texturePack, blendMap));
+       terrains.add(new Terrain(0, -1, loader, texturePack, blendMap, "heightmap"));
+       //terrains.add(new Terrain(-1, -1, loader, texturePack, blendMap, "heightmap"));
          
-        
+        //TODO Fix player terrain collision
         
         Camera camera = new Camera(player);
         
@@ -105,7 +105,7 @@ public class MainGameLoop {
         
         while(!Display.isCloseRequested()){
             camera.move();
-            player.move();
+            player.move(terrains.get(0));
             renderer.processEntity(player);
             
             for (Terrain terrain : terrains) {
