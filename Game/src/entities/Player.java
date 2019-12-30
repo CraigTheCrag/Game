@@ -1,5 +1,8 @@
 package entities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -14,8 +17,6 @@ public class Player extends Entity {
 	private static final float GRAVITY = -50;
 	private static final float JUMP_POWER = 24;
 	
-	private static final float TERRAIN_HEIGHT = 0;
-	
 	private float currentSpeed = 0;
 	private float currentTurnSpeed = 0;
 	private float upwardsSpeed = 0;
@@ -26,7 +27,7 @@ public class Player extends Entity {
 		super(model, position, rotX, rotY, rotZ, scale);
 	}
 	
-	public void move(Terrain terrain) {
+	public void move(List<Terrain> terrains) {
 		checkInputs();
 		super.increaseRotation(0, currentTurnSpeed*DisplayManager.getFrameTimeSeconds(), 0);
 		float distance = currentSpeed * DisplayManager.getFrameTimeSeconds();
@@ -35,7 +36,7 @@ public class Player extends Entity {
 		super.increasePosition(dx, 0, dz);
 		upwardsSpeed += GRAVITY * DisplayManager.getFrameTimeSeconds();
 		super.increasePosition(0, upwardsSpeed * DisplayManager.getFrameTimeSeconds(), 0);
-		float terrainHeight = terrain.getHeightOfTerrain(super.getPosition().x, super.getPosition().z);
+		float terrainHeight = super.getTerrainHeight(terrains);
 		if (super.getPosition().y < terrainHeight) {
 			upwardsSpeed = 0;
 			super.getPosition().y = terrainHeight;

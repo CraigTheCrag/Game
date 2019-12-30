@@ -1,7 +1,11 @@
 package entities;
  
 import models.TexturedModel;
- 
+import terrains.Terrain;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.lwjgl.util.vector.Vector3f;
  
 public class Entity {
@@ -10,6 +14,10 @@ public class Entity {
     private Vector3f position;
     private float rotX, rotY, rotZ;
     private float scale;
+    
+    private Terrain currentTerrain;
+    
+    private int textureIndex = 0;
  
     public Entity(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ,
             float scale) {
@@ -19,6 +27,27 @@ public class Entity {
         this.rotY = rotY;
         this.rotZ = rotZ;
         this.scale = scale;
+    }
+    
+    public Entity(TexturedModel model, int textureIndex, Vector3f position, float rotX, float rotY, float rotZ,
+            float scale) {
+    	this.textureIndex = textureIndex;
+        this.model = model;
+        this.position = position;
+        this.rotX = rotX;
+        this.rotY = rotY;
+        this.rotZ = rotZ;
+        this.scale = scale;
+    }
+    
+    public float getTextureXOffset() {
+    	int column = textureIndex % model.getTexture().getNumberOfRows();
+    	return (float)column / (float)model.getTexture().getNumberOfRows();
+    }
+    
+    public float getTextureYOffset() {
+    	int row = textureIndex / model.getTexture().getNumberOfRows();
+    	return (float)row / (float)model.getTexture().getNumberOfRows();
     }
  
     public void increasePosition(float dx, float dy, float dz) {
@@ -32,6 +61,36 @@ public class Entity {
         this.rotY += dy;
         this.rotZ += dz;
     }
+    
+	private Terrain findCurrentTerrain(List<Terrain> terrains) {
+		for (Terrain terrain : terrains) {
+			if (this.getPosition().x >= terrain.getX() && this.getPosition().z >= terrain.getZ() &&
+					this.getPosition().x < terrain.getX() + terrain.getTerrainSize() &&
+					this.getPosition().z < terrain.getZ() + terrain.getTerrainSize()) {
+				return terrain;
+			}
+		}
+		return null;
+	}
+	
+	protected float getTerrainHeight(List<Terrain> terrains) {
+		this.currentTerrain = this.findCurrentTerrain(terrains);
+		float xPos = this.getPosition().x;
+		float zPos = this.getPosition().z;
+		
+		float terrainHeight;
+		if (this.currentTerrain != null) {
+			terrainHeight = this.currentTerrain.getHeightOfTerrain(xPos, zPos);
+		} else {
+			terrainHeight = 0;
+		}
+		return terrainHeight;
+	}
+	
+	public void setCorrectPosition(List<Terrain> terrains) {
+		float newY = this.getTerrainHeight(terrains);
+		this.setPosition(new Vector3f(this.getPosition().x, newY, this.getPosition().z));
+	}
  
     public TexturedModel getModel() {
         return model;
