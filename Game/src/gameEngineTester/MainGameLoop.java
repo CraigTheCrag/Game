@@ -126,7 +126,7 @@ public class MainGameLoop {
         /*guis.add(new GuiTexture(loader.loadTexture("guiTest"),
         		new Vector2f(0.5f, 0.5f), new Vector2f(0.25f, 0.25f)));*/
         
-        MasterRenderer renderer = new MasterRenderer();
+        MasterRenderer renderer = new MasterRenderer(loader);
         GuiRenderer guiRenderer = new GuiRenderer(loader);
         
         while(!Display.isCloseRequested()){

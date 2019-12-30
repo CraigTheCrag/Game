@@ -13,5 +13,6 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="Game/lib/natives"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="lib/jars/PNGDecoder.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
