@@ -10,6 +10,8 @@ import org.lwjgl.util.vector.Vector3f;
  
 public class Entity {
  
+	public static final float GRAVITY = -50;
+	
     private TexturedModel model;
     private Vector3f position;
     private float rotX, rotY, rotZ;
@@ -50,47 +52,7 @@ public class Entity {
     	return (float)row / (float)model.getTexture().getNumberOfRows();
     }
  
-    public void increasePosition(float dx, float dy, float dz) {
-        this.position.x += dx;
-        this.position.y += dy;
-        this.position.z += dz;
-    }
- 
-    public void increaseRotation(float dx, float dy, float dz) {
-        this.rotX += dx;
-        this.rotY += dy;
-        this.rotZ += dz;
-    }
-    
-	private Terrain findCurrentTerrain(List<Terrain> terrains) {
-		for (Terrain terrain : terrains) {
-			if (this.getPosition().x >= terrain.getX() && this.getPosition().z >= terrain.getZ() &&
-					this.getPosition().x < terrain.getX() + terrain.getTerrainSize() &&
-					this.getPosition().z < terrain.getZ() + terrain.getTerrainSize()) {
-				return terrain;
-			}
-		}
-		return null;
-	}
-	
-	protected float getTerrainHeight(List<Terrain> terrains) {
-		this.currentTerrain = this.findCurrentTerrain(terrains);
-		float xPos = this.getPosition().x;
-		float zPos = this.getPosition().z;
-		
-		float terrainHeight;
-		if (this.currentTerrain != null) {
-			terrainHeight = this.currentTerrain.getHeightOfTerrain(xPos, zPos);
-		} else {
-			terrainHeight = 0;
-		}
-		return terrainHeight;
-	}
-	
-	public void setCorrectPosition(List<Terrain> terrains) {
-		float newY = this.getTerrainHeight(terrains);
-		this.setPosition(new Vector3f(this.getPosition().x, newY, this.getPosition().z));
-	}
+
  
     public TexturedModel getModel() {
         return model;

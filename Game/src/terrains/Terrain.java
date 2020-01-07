@@ -3,6 +3,7 @@ package terrains;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 
@@ -37,6 +38,31 @@ public class Terrain {
 		this.texturePack = texturePack;
 		this.blendMap = blendMap;
 		this.model = generateTerrain(loader, heightMap);
+	}
+	
+	public static float getTerrainHeight(Vector3f position, List<Terrain> terrains) {
+		Terrain currentTerrain = findCurrentTerrain(position, terrains);
+		float xPos = position.x;
+		float zPos = position.z;
+		
+		float terrainHeight;
+		if (currentTerrain != null) {
+			terrainHeight = currentTerrain.getHeightOfTerrain(xPos, zPos);
+		} else {
+			terrainHeight = 0;
+		}
+		return terrainHeight;
+	}
+	
+	private static Terrain findCurrentTerrain(Vector3f position, List<Terrain> terrains) {
+		for (Terrain terrain : terrains) {
+			if (position.x >= terrain.getX() && position.z >= terrain.getZ() &&
+					position.x < terrain.getX() + terrain.getTerrainSize() &&
+					position.z < terrain.getZ() + terrain.getTerrainSize()) {
+				return terrain;
+			}
+		}
+		return null;
 	}
 	
 	public float getX() {

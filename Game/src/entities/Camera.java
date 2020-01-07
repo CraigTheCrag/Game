@@ -24,11 +24,15 @@ public class Camera {
     public void move(){
         calculateZoom();
         calculatePitch();
-        calculateAngleAroundPlayer();
+        //calculateAngleAroundPlayer();
         float horizontalDistance = calculateHorizontalDistance();
         float verticalDistance = calculateVerticalDistance();
         calculateCameraPosition(horizontalDistance, verticalDistance);
         this.yaw = 180 - (player.getRotY() + angleAroundPlayer);
+    }
+    
+    public void invertPitch() {
+    	this.pitch *= -1;
     }
  
     public Vector3f getPosition() {
@@ -83,8 +87,10 @@ public class Camera {
     
     private void calculatePitch() {
     	if(Mouse.isButtonDown(1)) {
-    		float pitchChange = Mouse.getDY() * 0.1f;
+    		float pitchChange = Mouse.getDY() * 0.25f;
+    		float angleChange = Mouse.getDX() * 0.25f;
     		pitch -= pitchChange;
+    		angleAroundPlayer -= angleChange;
     		if (pitch < 0) {
     			pitch = 0;
     		} else if (pitch > 90){

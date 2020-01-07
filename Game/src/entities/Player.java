@@ -1,6 +1,5 @@
 package entities;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.lwjgl.input.Keyboard;
@@ -10,16 +9,17 @@ import models.TexturedModel;
 import renderEngine.DisplayManager;
 import terrains.Terrain;
 
-public class Player extends Entity {
+public class Player extends NonStaticEntity {
 
 	private static final float RUN_SPEED = 12.5f;
 	private static final float TURN_SPEED = 160;
-	private static final float GRAVITY = -50;
 	private static final float JUMP_POWER = 24;
 	
 	private float currentSpeed = 0;
 	private float currentTurnSpeed = 0;
 	private float upwardsSpeed = 0;
+	
+	private Vector3f previousPosition;
 	
 	private boolean isInAir = false;
 	
@@ -28,6 +28,7 @@ public class Player extends Entity {
 	}
 	
 	public void move(List<Terrain> terrains) {
+		previousPosition = super.getPosition();
 		checkInputs();
 		super.increaseRotation(0, currentTurnSpeed*DisplayManager.getFrameTimeSeconds(), 0);
 		float distance = currentSpeed * DisplayManager.getFrameTimeSeconds();
@@ -36,7 +37,7 @@ public class Player extends Entity {
 		super.increasePosition(dx, 0, dz);
 		upwardsSpeed += GRAVITY * DisplayManager.getFrameTimeSeconds();
 		super.increasePosition(0, upwardsSpeed * DisplayManager.getFrameTimeSeconds(), 0);
-		float terrainHeight = super.getTerrainHeight(terrains);
+		float terrainHeight = Terrain.getTerrainHeight(super.getPosition(), terrains);
 		if (super.getPosition().y < terrainHeight) {
 			upwardsSpeed = 0;
 			super.getPosition().y = terrainHeight;
@@ -79,6 +80,10 @@ public class Player extends Entity {
 				isInAir = true;
 			}
 		}
+	}
+	
+	public Vector3f getPreviousPosition() {
+		return previousPosition;
 	}
 
 }
