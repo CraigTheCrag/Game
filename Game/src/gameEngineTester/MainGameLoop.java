@@ -158,16 +158,16 @@ public class MainGameLoop {
         	}
         }
         
-        Player player = new Player(playerModel, new Vector3f(0,0,-10),0,0,0,0.4f);
+       Player player = new Player(playerModel, new Vector3f(0,Terrain.getTerrainHeight(new Vector3f(0,0,-10), terrains)+0.1f,-10),0,0,0,0.4f);
         
        lights.add(new Light(new Vector3f(0, 20000, -7000), new Vector3f(0.6f,0.6f,0.6f)));
-       lights.add(new Light(new Vector3f(185, 10, -293), new Vector3f(2, 0, 0), new Vector3f(1, 0.01f, 0.002f)));
+       /*lights.add(new Light(new Vector3f(185, 10, -293), new Vector3f(2, 0, 0), new Vector3f(1, 0.01f, 0.002f)));
        lights.add(new Light(new Vector3f(370, 17, -300), new Vector3f(0, 2, 2), new Vector3f(1, 0.01f, 0.002f)));
        lights.add(new Light(new Vector3f(293, 7, -305), new Vector3f(2, 2, 0), new Vector3f(1, 0.01f, 0.002f)));
        
        entities.add(new Entity(lampModel, new Vector3f(185, -4.7f, -293), 0, 0, 0, 1));
        entities.add(new Entity(lampModel, new Vector3f(370, 4.2f, -300), 0, 0, 0, 1));
-       entities.add(new Entity(lampModel, new Vector3f(293, -6.8f, -305), 0, 0, 0, 1));
+       entities.add(new Entity(lampModel, new Vector3f(293, -6.8f, -305), 0, 0, 0, 1));*/
        
        entities.add(player);
         
@@ -187,20 +187,20 @@ public class MainGameLoop {
         
         //*************************************
         
-        ParticleTexture texture = new ParticleTexture(loader.loadGameTexture("particleAtlas"), 4);
+        /*ParticleTexture texture = new ParticleTexture(loader.loadGameTexture("particleAtlas"), 4, false);
         
         ParticleSystem system = new ParticleSystem(texture, 35, 25, 0.3f, 2f, 1f);
         system.setDirection(new Vector3f(0f, 1f, 0f), 0.1f);
         system.randomizeRotation();
         system.setScaleError(0.5f);
-        system.setSpeedError(0.5f);
+        system.setSpeedError(0.5f);*/
         
         while(!Display.isCloseRequested()){
         	
         	player.move(terrains);
             camera.move();
             
-            system.generateParticles(player.getPosition());
+            //system.generateParticles(player.getPosition());
             
             ParticleMaster.update(camera);
             

@@ -52,8 +52,6 @@ public class Entity {
     	return (float)row / (float)model.getTexture().getNumberOfRows();
     }
  
-
- 
     public TexturedModel getModel() {
         return model;
     }
