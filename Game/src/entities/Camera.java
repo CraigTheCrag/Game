@@ -2,6 +2,8 @@ package entities;
  
 import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector3f;
+
+import nonstaticentities.Player;
  
 public class Camera {
 	

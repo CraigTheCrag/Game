@@ -1,15 +1,23 @@
 package entities;
  
-import models.TexturedModel;
-import terrains.Terrain;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import org.lwjgl.util.vector.Vector3f;
+
+import models.RawModel;
+import models.TexturedModel;
+import objConverter.ModelData;
+import objConverter.OBJFileLoader;
+import renderEngine.Loader;
+import terrains.Terrain;
+import textures.ModelTexture;
  
 public class Entity {
  
+	private String OBJFile;
+	private String textureFile;
+	private int numberOfRows = 1;
+	
+	private Loader loader;
+	
 	public static final float GRAVITY = -50;
 	
     private TexturedModel model;
@@ -40,6 +48,50 @@ public class Entity {
         this.rotY = rotY;
         this.rotZ = rotZ;
         this.scale = scale;
+    }
+    
+    public Entity(Loader loader, String OBJFile, String textureFile, int numberOfRows, int textureIndex, Vector3f position,
+    		float rotX, float rotY, float rotZ, float scale) {
+    	this.loader = loader;
+    	this.OBJFile = OBJFile;
+    	this.textureFile = textureFile;
+    	this.numberOfRows = numberOfRows;
+    	this.textureIndex = textureIndex;
+    	
+    	if (this.textureIndex >= (this.numberOfRows*this.numberOfRows)) {
+    		this.textureIndex = this.numberOfRows * this.numberOfRows - 1;
+    	}
+    	
+    	this.position = position;
+    	this.rotX = rotX;
+    	this.rotY = rotY;
+    	this.rotZ = rotZ;
+    	this.scale = scale;
+    	this.loadModel();
+    }
+    
+    public Entity(Loader loader, String OBJFile, String textureFile, Vector3f position, float rotX, float rotY, float rotZ,
+    		float scale) {
+    	this.loader = loader;
+    	this.OBJFile = OBJFile;
+    	this.textureFile = textureFile;
+    	this.numberOfRows = 1;
+    	this.textureIndex = 0;
+    	this.position = position;
+    	this.rotX = rotX;
+    	this.rotY = rotY;
+    	this.rotZ = rotZ;
+    	this.scale = scale;
+    	this.loadModel();
+    }
+    
+    private void loadModel() {
+    	ModelData data = OBJFileLoader.loadOBJ(OBJFile);
+		RawModel rawModel = loader.loadToVAO(data.getVertices(), data.getTextureCoords(),
+        		data.getNormals(), data.getIndices());
+		ModelTexture modelTexture = new ModelTexture(loader.loadGameTexture(textureFile));
+		modelTexture.setNumberOfRows(numberOfRows);
+		this.model = new TexturedModel(rawModel, modelTexture);
     }
     
     public float getTextureXOffset() {

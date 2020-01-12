@@ -1,10 +1,12 @@
-package entities;
+package nonstaticentities;
 
 import java.util.List;
 
 import org.lwjgl.util.vector.Vector3f;
 
+import entities.Entity;
 import models.TexturedModel;
+import renderEngine.Loader;
 import terrains.Terrain;
 
 public abstract class NonStaticEntity extends Entity {
@@ -18,6 +20,16 @@ public abstract class NonStaticEntity extends Entity {
             float scale) {
     	super(model, textureIndex, position, rotX, rotY, rotZ, scale);
     }
+	
+	public NonStaticEntity(Loader loader, String OBJFile, String textureFile, int numberOfRows, int textureIndex,
+			Vector3f position, float rotX, float rotY, float rotZ, float scale) {
+		super(loader, OBJFile, textureFile, numberOfRows, textureIndex, position, rotX, rotY, rotZ, scale);
+	}
+	
+	public NonStaticEntity(Loader loader, String OBJFile, String textureFile, Vector3f position, float rotX, float rotY, float rotZ,
+			float scale) {
+		super(loader, OBJFile, textureFile, position, rotX, rotY, rotZ, scale);
+	}
 	
 	public abstract void move(List<Terrain> terrains);
 	
