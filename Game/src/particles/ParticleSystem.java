@@ -38,6 +38,10 @@ public class ParticleSystem {
         this.direction = new Vector3f(direction);
         this.directionDeviation = (float) (deviation * Math.PI);
     }
+    
+    public void setPps(float pps) {
+    	this.pps = pps;
+    }
  
     public void randomizeRotation() {
         randomRotation = true;

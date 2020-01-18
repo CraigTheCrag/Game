@@ -32,11 +32,11 @@ public class WaterTile {
 	public static WaterTile getWaterTile(Vector3f position, List<WaterTile> waters) {
 		float tileX, tileZ;
 		for (WaterTile water : waters) {
-			tileX = water.getX() - (TILE_SIZE / 2f);
-			tileZ = water.getZ() - (TILE_SIZE / 2f);
+			tileX = water.getX() - (TILE_SIZE);
+			tileZ = water.getZ() - (TILE_SIZE);
 			
-			if ((position.x < tileX + TILE_SIZE && position.x >= tileX) &&
-					(position.z < tileZ + TILE_SIZE && position.z > tileZ) && (position.y <= water.getHeight())) {
+			if ((position.x < tileX + TILE_SIZE*2f && position.x >= tileX) &&
+					(position.z < tileZ + TILE_SIZE*2f && position.z > tileZ) && (position.y <= water.getHeight())) {
 				return water;
 			}
 		}

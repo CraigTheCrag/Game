@@ -2,8 +2,6 @@ package entities;
  
 import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector3f;
-
-import nonstaticentities.Player;
  
 public class Camera {
 	
@@ -100,14 +98,4 @@ public class Camera {
     		}
     	}
     }
-    
-    private void calculateAngleAroundPlayer() {
-    	if(Mouse.isButtonDown(0)) {
-    		float angleChange = Mouse.getDX() * 0.3f;
-    		angleAroundPlayer -= angleChange;
-    	}
-    }
-     
-     
- 
 }

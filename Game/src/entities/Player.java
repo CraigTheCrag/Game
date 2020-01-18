@@ -1,4 +1,4 @@
-package nonstaticentities;
+package entities;
 
 import java.util.List;
 
@@ -45,6 +45,14 @@ public class Player extends NonStaticEntity {
 		}
 	}
 	
+	public float getCurrentSpeed() {
+		return currentSpeed;
+	}
+
+	public float getUpwardsSpeed() {
+		return upwardsSpeed;
+	}
+
 	private void jump() {
 		this.upwardsSpeed = JUMP_POWER;
 	}

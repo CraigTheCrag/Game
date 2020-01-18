@@ -30,7 +30,7 @@ public class Entity {
     private int textureIndex = 0;
  
     public Entity(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ,
-            float scale) {
+            float scale, boolean useFakeLighting, boolean hasTransparency) {
         this.model = model;
         this.position = position;
         this.rotX = rotX;
@@ -40,7 +40,19 @@ public class Entity {
     }
     
     public Entity(TexturedModel model, int textureIndex, Vector3f position, float rotX, float rotY, float rotZ,
-            float scale) {
+            float scale, boolean useFakeLighting, boolean hasTransparency) {
+    	this.textureIndex = textureIndex;
+        this.model = model;
+        this.position = position;
+        this.rotX = rotX;
+        this.rotY = rotY;
+        this.rotZ = rotZ;
+        this.scale = scale;
+    }
+    
+    public Entity(TexturedModel model, int numberOfRows, int textureIndex, Vector3f position, float rotX, float rotY, float rotZ,
+            float scale, boolean useFakeLighting, boolean hasTransparency) {
+    	this.numberOfRows = numberOfRows;
     	this.textureIndex = textureIndex;
         this.model = model;
         this.position = position;
@@ -51,7 +63,7 @@ public class Entity {
     }
     
     public Entity(Loader loader, String OBJFile, String textureFile, int numberOfRows, int textureIndex, Vector3f position,
-    		float rotX, float rotY, float rotZ, float scale) {
+    		float rotX, float rotY, float rotZ, float scale, boolean useFakeLighting, boolean hasTransparency) {
     	this.loader = loader;
     	this.OBJFile = OBJFile;
     	this.textureFile = textureFile;
@@ -68,10 +80,13 @@ public class Entity {
     	this.rotZ = rotZ;
     	this.scale = scale;
     	this.loadModel();
+    	
+    	this.model.getTexture().setHasTransparency(hasTransparency);
+    	this.model.getTexture().setUseFakeLighting(useFakeLighting);
     }
     
     public Entity(Loader loader, String OBJFile, String textureFile, Vector3f position, float rotX, float rotY, float rotZ,
-    		float scale) {
+    		float scale, boolean useFakeLighting, boolean hasTransparency) {
     	this.loader = loader;
     	this.OBJFile = OBJFile;
     	this.textureFile = textureFile;
@@ -83,6 +98,9 @@ public class Entity {
     	this.rotZ = rotZ;
     	this.scale = scale;
     	this.loadModel();
+    	
+    	this.model.getTexture().setHasTransparency(hasTransparency);
+    	this.model.getTexture().setUseFakeLighting(useFakeLighting);
     }
     
     private void loadModel() {

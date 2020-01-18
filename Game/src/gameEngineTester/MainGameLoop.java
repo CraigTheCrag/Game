@@ -15,6 +15,8 @@ import org.lwjgl.util.vector.Vector4f;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
+import entities.Player;
+import entities.StaticEntity;
 import fontMeshCreator.FontType;
 import fontMeshCreator.GUIText;
 import fontRendering.TextMaster;
@@ -22,16 +24,14 @@ import guis.GuiRenderer;
 import guis.GuiTexture;
 import models.RawModel;
 import models.TexturedModel;
-import nonstaticentities.Player;
-import nonstaticentities.Rabbit;
 import objConverter.ModelData;
 import objConverter.OBJFileLoader;
 import particles.ParticleMaster;
+import particles.ParticleSystem;
+import particles.ParticleTexture;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
-import staticentities.LowPolyTree;
-import staticentities.StaticEntity;
 import terrains.Terrain;
 import textures.ModelTexture;
 import textures.TerrainTexture;
@@ -145,27 +145,24 @@ public class MainGameLoop {
         	z = terrainMinZ + random.nextFloat() * (terrainMaxZ - terrainMinZ);
         	y = Terrain.getTerrainHeight(new Vector3f(x,0,z), terrains);
         	
-        	entities.add(new StaticEntity(grassModel, new Vector3f(x,y,z),0,0,0,1));
+        	entities.add(new StaticEntity(grassModel, new Vector3f(x,y,z),0,0,0,1, true, true));
         	
         	x = terrainMinX + random.nextFloat() * (terrainMaxX - terrainMinX);
         	z = terrainMinZ + random.nextFloat() * (terrainMaxZ - terrainMinZ);
         	y = Terrain.getTerrainHeight(new Vector3f(x,0,z), terrains);
         	
-        	entities.add(new StaticEntity(fernModel, random.nextInt(4), new Vector3f(x,y,z),0,0,0,0.6f));
+        	entities.add(new StaticEntity(fernModel, 2,random.nextInt(4), new Vector3f(x,y,z),0,0,0,0.6f, false, true));
         	if (i % 2 == 0 | i % 3 == 0 | i % 5 == 0) {
         		
         		x = terrainMinX + random.nextFloat() * (terrainMaxX - terrainMinX);
             	z = terrainMinZ + random.nextFloat() * (terrainMaxZ - terrainMinZ);
             	y = Terrain.getTerrainHeight(new Vector3f(x,0,z), terrains);
         		
-        		entities.add(new LowPolyTree(loader, random.nextInt(3), new Vector3f(x,y,z),0,0,0,0.35f));
+        		entities.add(new StaticEntity(lowTreeModel, 2, random.nextInt(3), new Vector3f(x,y,z),0,0,0,0.35f));
         	}
         }
        
        Player player = new Player(playerModel, new Vector3f(0,Terrain.getTerrainHeight(new Vector3f(0,0,-10), terrains)+0.1f,-10),0,0,0,0.4f);
-       
-       entities.add(new Rabbit(loader, player.getPosition(), player.getRotX(), player.getRotY(), player.getRotZ(),
-    		   player.getScale()));
         
        lights.add(new Light(new Vector3f(0, 20000, -7000), new Vector3f(0.6f,0.6f,0.6f)));
        /*lights.add(new Light(new Vector3f(185, 10, -293), new Vector3f(2, 0, 0), new Vector3f(1, 0.01f, 0.002f)));
@@ -194,29 +191,25 @@ public class MainGameLoop {
         
        //*************************************
         
-       /*ParticleTexture texture = new ParticleTexture(loader.loadGameTexture("particleAtlas"), 4, false);
+       ParticleTexture bubble = new ParticleTexture(loader.loadGameTexture("bubble"), 1, false);
         
-       ParticleSystem system = new ParticleSystem(texture, 35, 25, 0.3f, 2f, 1f);
+       ParticleSystem system = new ParticleSystem(bubble, 35, 25, 0.4f, 2f, 1f);
        system.setDirection(new Vector3f(0f, 1f, 0f), 0.1f);
        system.randomizeRotation();
        system.setScaleError(0.5f);
-       system.setSpeedError(0.5f);*/
+       system.setSpeedError(0.2f);
+       system.setPps(0);
         
         while(!Display.isCloseRequested()){
         	
         	player.move(terrains);
             camera.move();
             
-            //system.generateParticles(player.getPosition());
+            system.generateParticles(player.getPosition());
             
             ParticleMaster.update(camera);
             
-            /*if (player.getPreviousPosition() != player.getPosition() && 
-        			WaterTile.getWaterTile(player.getPosition(), waters) != null) {
-        		
-        		new Particle(player.getPosition(), new Vector3f((float) Math.random()*10.0f,12f,(float) Math.random()*10.0f), 0.3f, 2f, 0f, 1f, new Vector3f(0f, 0.15f, 0.35f));
-        		
-        	}*/
+            
             
             GL11.glEnable(GL30.GL_CLIP_DISTANCE0);
             
@@ -238,6 +231,16 @@ public class MainGameLoop {
             buffers.unbindCurrentFrameBuffer();
             renderer.renderScene(entities, terrains, lights, camera, new Vector4f(0,-1,0,1000000000));
             waterRenderer.render(waters, camera, lights.get(0));
+            
+            if (player.getPreviousPosition() != player.getPosition() && 
+        			WaterTile.getWaterTile(player.getPosition(), waters) != null &&
+        			player.getCurrentSpeed() != 0 && player.getUpwardsSpeed() != 0) {
+        		
+        		system.setPps(25f);
+        		
+        	} else {
+        		system.setPps(0f);
+        	}
             
             ParticleMaster.renderPartices(camera);
             
